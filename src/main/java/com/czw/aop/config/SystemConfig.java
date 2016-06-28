@@ -14,7 +14,6 @@ import com.czw.aop.act.Performance;
 import com.czw.aop.act.impl.BlankDisc;
 import com.czw.aop.act.impl.DancePerformance;
 import com.czw.aop.aspectj.AudienceImprove;
-import com.czw.aop.aspectj.EncoreableIntroducer;
 import com.czw.aop.aspectj.TrackCounter;
 
 /** 
