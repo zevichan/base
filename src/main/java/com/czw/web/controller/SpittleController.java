@@ -6,7 +6,9 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
+import com.czw.web.bean.Spittle;
 import com.czw.web.dao.SpittleRepository;
+import com.czw.web.exception.SpittleNotFoundException;
 
 /**
  * @author Zevi Chan
@@ -27,6 +29,15 @@ public class SpittleController {
 	public String spittles(Model model) {
 		model.addAttribute(spittleRepository.findSpittles(Long.MAX_VALUE, 20));
 		return "spittles";
+	}
+	
+	
+	public String saveSpittles(Spittle spittle,Model model){
+		try {
+			
+		} catch (Exception e) {
+		}
+		return "";
 	}
 
 }
