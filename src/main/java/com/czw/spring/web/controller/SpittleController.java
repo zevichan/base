@@ -8,7 +8,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 import com.czw.spring.web.bean.Spittle;
 import com.czw.spring.web.dao.SpittleRepository;
-import com.czw.spring.web.exception.SpittleNotFoundException;
 
 /**
  * @author Zevi Chan
