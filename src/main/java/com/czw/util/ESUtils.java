@@ -2,14 +2,18 @@ package com.czw.util;
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;
+import java.util.Set;
 
 import org.elasticsearch.action.get.GetRequest;
 import org.elasticsearch.action.get.GetResponse;
+import org.elasticsearch.action.index.IndexResponse;
 import org.elasticsearch.action.update.UpdateResponse;
 import org.elasticsearch.client.Client;
 import org.elasticsearch.client.transport.TransportClient;
 import org.elasticsearch.common.settings.Settings;
 import org.elasticsearch.common.transport.InetSocketTransportAddress;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 /**
  * @author Zevi Chan
@@ -43,31 +47,48 @@ public class ESUtils {
 	 * 打印GetResponse结果
 	 * @param response
 	 */
-	public static void printGetResponse(GetResponse response){
-		if(response == null)
-			System.out.println("\nGetResponse is null !");
+	public static void printResponse(GetResponse response){
+		if(!response.isExists())
+			System.out.println("\nGetResponse is't exist !");
 		else
-			System.out.println("\nURL:"+getResURL(response)+",结果:"+response.getSourceAsString());
+			System.out.println("\nURL:"+resURL(response)+",结果:"+response.getSourceAsString());
 	}
 	/**
 	 * 打印GetResponse结果
 	 * @param response
 	 */
-	public static void printUpdateResponse(UpdateResponse response){
-		if(response == null || response.getGetResult() == null)
-			System.out.println("\nUpdateResponse or getresult is null !");
+	public static void printResponse(UpdateResponse response){
+		if(!response.isCreated() || !response.getGetResult().isExists())
+			System.out.println("\nUpdateResponse or getresult is't exist !");
 		else
-			System.out.println("\nURL:"+updateResURL(response)+",结果:"+response.getGetResult().sourceAsString());
+			System.out.println("\nURL:"+resURL(response)+",结果:"+response.getGetResult().sourceAsString());
+	}
+	/**
+	 * 打印IndexResponse结果
+	 * @param response
+	 */
+	public static void printResponse(IndexResponse response){
+		if(!response.isCreated())
+			System.out.println("\nIndexResponse !");
+		else
+			System.out.println("\nURL:"+resURL(response)+",结果:"+parseHeaderJson(response.getHeaders()));
 	}
 	
-	public static String getResURL(GetResponse response){
+	public static String resURL(GetResponse response){
 		return spliceURL(response.getIndex())
 					.append("/")
 					.append(response.getType())
 					.append("/")
 					.append(response.getId()).toString();
 	}
-	public static String updateResURL(UpdateResponse response){
+	public static String resURL(UpdateResponse response){
+		return spliceURL(response.getIndex())
+				.append("/")
+				.append(response.getType())
+				.append("/")
+				.append(response.getId()).toString();
+	}
+	public static String resURL(IndexResponse response){
 		return spliceURL(response.getIndex())
 				.append("/")
 				.append(response.getType())
@@ -79,7 +100,14 @@ public class ESUtils {
 		return sb.append(str);
 	}
 	
-	
+	public static String parseHeaderJson(Set<String> header){
+		StringBuilder sb = new StringBuilder("header:【");
+		for(String s : header){
+			sb.append(s+",");
+		}
+		sb = sb.deleteCharAt(sb.length()-1);
+		return sb.append("】").toString();
+	}
 	
 	
 	

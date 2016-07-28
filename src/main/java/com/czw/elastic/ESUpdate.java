@@ -1,17 +1,18 @@
 package com.czw.elastic;
 
+import static com.czw.util.ESUtils.*;
+
 import java.io.IOException;
 import java.util.concurrent.ExecutionException;
 
 import org.elasticsearch.action.index.IndexRequest;
+import org.elasticsearch.action.index.IndexResponse;
 import org.elasticsearch.action.update.UpdateRequest;
 import org.elasticsearch.action.update.UpdateResponse;
 import org.elasticsearch.client.Client;
 import org.elasticsearch.common.xcontent.XContentFactory;
 import org.junit.Ignore;
 import org.junit.Test;
-
-import com.czw.util.ESUtils;
 
 /**
  * @author Zevi Chan
@@ -22,7 +23,7 @@ public class ESUpdate {
 	@Ignore
 	@Test
 	public void updateTest() {
-		Client client = ESUtils.initClient();
+		Client client = initClient();
 		UpdateRequest updateRequest = new UpdateRequest();
 		updateRequest.index("people");
 		updateRequest.type("person");
@@ -47,7 +48,7 @@ public class ESUpdate {
 	@Ignore
 	@Test
 	public void preparedUpdateTest(){
-		Client client = ESUtils.initClient();
+		Client client = initClient();
 		/*client.prepareUpdate("ttl", "doc", "1")
 				.setScript(new Script("ctx._source.gender = \"male\"", ScriptService.ScriptType.INLINE, null, null))
 				.get();*/
@@ -74,10 +75,11 @@ public class ESUpdate {
 	 * UpdateRequest-更新shard
 	 */
 	@Test
+	@Ignore
 	public void updateAddTest(){
 		try {
 		
-			Client client = ESUtils.initClient();
+			Client client = initClient();
 			IndexRequest indexRequest = new IndexRequest("people", "person", "2")
 			        .source(XContentFactory.jsonBuilder()
 			        		.startObject()
@@ -98,6 +100,13 @@ public class ESUpdate {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+	}
+	
+	@Test
+	public void indexResponse(){
+		Client c = initClient();
+		IndexResponse ir = c.prepareIndex("goods", "info").setSource("").execute().actionGet();
+		printResponse(ir);
 	}
 
 }
