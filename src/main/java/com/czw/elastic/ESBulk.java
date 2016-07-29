@@ -107,9 +107,10 @@ public class ESBulk {
 	 */
 	@Test
 	public void bulkBatchImport() {
+		String filePath = "d:\\tmp\\goods_info.dat";
 		Client client = initClient();
 		try {
-			BufferedReader br = new BufferedReader(new FileReader("d:\\tmp\\goods_info.dat"));
+			BufferedReader br = new BufferedReader(new FileReader(filePath));
 			String json = null;
 			BulkResponse bulkResponse = null;
 			int count = 0;

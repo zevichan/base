@@ -1,12 +1,14 @@
 package com.czw.elastic;
 
 import static com.czw.util.ESUtils.initClient;
+import static com.czw.util.ESUtils.parseHeaderJson;
 import static com.czw.util.ESUtils.printResponse;
 
 import org.elasticsearch.action.count.CountResponse;
 import org.elasticsearch.action.get.GetResponse;
 import org.elasticsearch.action.get.MultiGetItemResponse;
 import org.elasticsearch.action.get.MultiGetResponse;
+import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.client.Client;
 import org.elasticsearch.index.query.QueryBuilders;
 import org.junit.Ignore;
@@ -39,7 +41,7 @@ public class ESGet {
 		Client client = initClient();
 		MultiGetResponse multiGetItemResponses = client.prepareMultiGet()
 			    .add("megacorp", "employee", "1")           
-			    .add("megacorp", "employee", "2", "3")  
+			    .add("goods", "info", "20", "30")  
 			    .add("people", "person", "1")          
 			    .get();
 
@@ -58,6 +60,7 @@ public class ESGet {
 	 */
 	@SuppressWarnings("deprecation")
 	@Test
+	@Ignore
 	public void countTest(){
 		Client c = initClient();
 		CountResponse response = c.prepareCount("goods")
@@ -65,6 +68,13 @@ public class ESGet {
 		        .execute()
 		        .actionGet();
 			System.out.println(response == null ? "null":"count : "+response.contextSize());
+	}
+	
+	@Test
+	public void countTest1(){
+		Client c = initClient();
+		SearchResponse response = c.prepareSearch("goods","info").setQuery(QueryBuilders.matchAllQuery()).get();
+			System.out.println(response == null? "null":parseHeaderJson(response.getHeaders()));
 	}
 	
 

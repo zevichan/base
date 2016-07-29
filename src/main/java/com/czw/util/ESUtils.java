@@ -48,7 +48,7 @@ public class ESUtils {
 	 * @param response
 	 */
 	public static void printResponse(GetResponse response){
-		if(!response.isExists())
+		if(null ==response || !response.isExists())
 			System.out.println("\nGetResponse is't exist !");
 		else
 			System.out.println("\nURL:"+resURL(response)+",结果:"+response.getSourceAsString());
@@ -58,7 +58,7 @@ public class ESUtils {
 	 * @param response
 	 */
 	public static void printResponse(UpdateResponse response){
-		if(!response.isCreated() || !response.getGetResult().isExists())
+		if(null ==response || !response.isCreated() || !response.getGetResult().isExists())
 			System.out.println("\nUpdateResponse or getresult is't exist !");
 		else
 			System.out.println("\nURL:"+resURL(response)+",结果:"+response.getGetResult().sourceAsString());
@@ -68,7 +68,7 @@ public class ESUtils {
 	 * @param response
 	 */
 	public static void printResponse(IndexResponse response){
-		if(!response.isCreated())
+		if(null == response)
 			System.out.println("\nIndexResponse !");
 		else
 			System.out.println("\nURL:"+resURL(response)+",结果:"+parseHeaderJson(response.getHeaders()));
@@ -101,12 +101,11 @@ public class ESUtils {
 	}
 	
 	public static String parseHeaderJson(Set<String> header){
-		StringBuilder sb = new StringBuilder("header:【");
+		StringBuilder sb = new StringBuilder("header:【 ");
 		for(String s : header){
 			sb.append(s+",");
 		}
-		sb = sb.deleteCharAt(sb.length()-1);
-		return sb.append("】").toString();
+		return sb.deleteCharAt(sb.length()-1).append("】").toString();
 	}
 	
 	

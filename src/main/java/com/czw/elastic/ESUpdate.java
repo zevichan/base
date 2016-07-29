@@ -20,23 +20,22 @@ import org.junit.Test;
  */
 public class ESUpdate {
 
-	@Ignore
 	@Test
+	@Ignore
 	public void updateTest() {
 		Client client = initClient();
 		UpdateRequest updateRequest = new UpdateRequest();
-		updateRequest.index("people");
-		updateRequest.type("person");
+		updateRequest.index("goods");
+		updateRequest.type("info");
 		updateRequest.id("1");
 		try {
 			updateRequest.doc(XContentFactory.jsonBuilder()
 					.startObject()
-					.field("gender", "male")
-					.field("name", "张三")
-					.field("age", 20).endObject());
+					.field("goodsShows", "单果约100-130g，皮薄肉脆，果肉细腻清甜,哈哈--智障")
+					.endObject());
 
 			UpdateResponse response = client.update(updateRequest).get();
-			System.out.println("结果：" + response.getGetResult().sourceAsString());
+			printResponse(response);
 		} catch (InterruptedException | IOException | ExecutionException e) {
 			e.printStackTrace();
 		}
@@ -45,26 +44,27 @@ public class ESUpdate {
 	/**
 	 * document/id必须存在
 	 */
-	@Ignore
 	@Test
+	@Ignore
 	public void preparedUpdateTest(){
 		Client client = initClient();
+		
+		//通过文件中的键值对或者字符串键值对来更新
+		//如果通过文件使用：ScriptService.ScriptType.FILE
+		
 		/*client.prepareUpdate("ttl", "doc", "1")
 				.setScript(new Script("ctx._source.gender = \"male\"", ScriptService.ScriptType.INLINE, null, null))
 				.get();*/
 		try {
 			
-			UpdateResponse response = client.prepareUpdate("people", "person", "1")
+			//不存在document会报错missing
+			UpdateResponse response = client.prepareUpdate("goods", "info", "1")
 					.setDoc(XContentFactory.jsonBuilder()
 							.startObject()
-							.field("gender", "male")
-							.field("name", "张三")
-							.field("age", 20)
+							.field("goodsName", "库尔勒香梨 特级 <什么鬼名字，没听过>")
 							.endObject())
 					.get();
-			System.out.println("hahah");
-			System.out.println("结果："+response.getGetResult().sourceAsString());
-			System.out.println("hahah");
+			printResponse(response);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -75,27 +75,24 @@ public class ESUpdate {
 	 * UpdateRequest-更新shard
 	 */
 	@Test
-	@Ignore
+	
 	public void updateAddTest(){
 		try {
 		
 			Client client = initClient();
-			IndexRequest indexRequest = new IndexRequest("people", "person", "2")
+			IndexRequest indexRequest = new IndexRequest("goods", "info", "95535")
 			        .source(XContentFactory.jsonBuilder()
 			        		.startObject()
-							.field("gender", "male")
-							.field("name", "李四")
-							.field("age", 25)
+			        		.field("goodsName", "库尔勒香梨 特级 <什么鬼名字，没听过>")
 							.endObject());
-			UpdateRequest updateRequest = new UpdateRequest("people", "person", "2")
+			UpdateRequest updateRequest = new UpdateRequest("goods", "info", "95535")
 			        .doc(XContentFactory.jsonBuilder()
 			        		.startObject()
-							.field("age", 30)
+			        		.field("goodsName", "库尔勒香梨 特级 <什么鬼名字，没听过>")
 							.endObject())
 			        .upsert(indexRequest);              
 			UpdateResponse response = client.update(updateRequest).get();
-			if(response != null && response.getGetResult() != null)
-				System.out.println(response.getGetResult().sourceAsString());
+			printResponse(response);
 			
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -103,6 +100,7 @@ public class ESUpdate {
 	}
 	
 	@Test
+	@Ignore
 	public void indexResponse(){
 		Client c = initClient();
 		IndexResponse ir = c.prepareIndex("goods", "info").setSource("").execute().actionGet();
