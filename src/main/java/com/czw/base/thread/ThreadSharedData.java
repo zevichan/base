@@ -34,7 +34,13 @@ public class ThreadSharedData extends Thread {
 /**
  * volatile字段并不能达到线程并发中的字段实时更新
  * 只是说明线程在修改字段之后会线程副本中的count值同步
- * 到主内存中
+ * 到主内存中,一个线程的修改对其他线程可见。
+ * 对非原子的Long值的多线程访问就用volatile
+ *
+ * 1.对变量的写操作不依赖于当前值
+ * 2.该变量没有包含在具有其他变量的不变式中
+ *
+ * 线程读取主内存的字段到线程副本字段进行操作，volatile
  *
  * Thread.currentThread().isAlive()和this.isAlive()是有差异的
  *

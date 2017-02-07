@@ -7,19 +7,21 @@ import java.util.Random;
  */
 public class TestRandom {
     public static void main(String[] args){
-        Random r = new Random(1);
-        Random r1 = new Random(1);
+//        Random r = new Random(1);
+//        Random r1 = new Random(1);
+//
+//        System.out.println("r:"+r.nextInt(100));
+//        System.out.println("r:"+r.nextInt(100));
+//        System.out.println("r:"+r.nextInt(100));
+//        System.out.println("r:"+r.nextInt(100));
+//        System.out.println("r:"+r.nextInt(100));
+//        System.out.println("r1:"+r1.nextInt(100));
+//        System.out.println("r1:"+r1.nextInt(100));
+//        System.out.println("r1:"+r1.nextInt(100));
+//        System.out.println("r1:"+r1.nextInt(100));
+//        System.out.println("r1:"+r1.nextInt(100));
 
-        System.out.println("r:"+r.nextInt(100));
-        System.out.println("r:"+r.nextInt(100));
-        System.out.println("r:"+r.nextInt(100));
-        System.out.println("r:"+r.nextInt(100));
-        System.out.println("r:"+r.nextInt(100));
-        System.out.println("r1:"+r1.nextInt(100));
-        System.out.println("r1:"+r1.nextInt(100));
-        System.out.println("r1:"+r1.nextInt(100));
-        System.out.println("r1:"+r1.nextInt(100));
-        System.out.println("r1:"+r1.nextInt(100));
+
 
     }
 

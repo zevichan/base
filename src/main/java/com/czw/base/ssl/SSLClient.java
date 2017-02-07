@@ -14,7 +14,7 @@ import javax.net.ssl.SSLSocket;
 import javax.net.ssl.TrustManagerFactory;  
   
 /**
- * ssl client
+ * ssl client，别人的代码，我只是拿来学习
  * @author Zevi Chan
  * @Date 2016-07-25 15:30:43
  */ 

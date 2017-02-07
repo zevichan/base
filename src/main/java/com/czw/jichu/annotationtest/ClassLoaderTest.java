@@ -9,31 +9,31 @@ import java.util.Date;
  * */
 public class ClassLoaderTest {
 
-	public static void main(String[] args)throws Exception {
-		// TODO Auto-generated method stub
-		System.out.println(
-				ClassLoaderTest.class.getClassLoader().getClass().getName()
-				);
-		System.out.println(
-				System.class.getClassLoader()
-				);
-		System.out.println("--------1");
-		ClassLoader cl = ClassLoaderTest.class.getClassLoader();
-		while(cl != null){
-			System.out.println(cl.getClass().getName());
-			cl = cl.getParent();
-		}
-		System.out.println(cl);
-		
-		System.out.println("-----------2");
-		
+    public static void main(String[] args) throws Exception {
+        // TODO Auto-generated method stub
+        System.out.println(
+                ClassLoaderTest.class.getClassLoader().getClass().getName()
+        );
+        System.out.println(
+                System.class.getClassLoader()
+        );
+        System.out.println("--------1");
+        ClassLoader cl = ClassLoaderTest.class.getClassLoader();
+        while (cl != null) {
+            System.out.println(cl.getClass().getName());
+            cl = cl.getParent();
+        }
+        System.out.println(cl);
+
+        System.out.println("-----------2");
+
 //		System.out.println(new ClassLoaderAttachment().toString());
-		
-		Class<?> cls = new MyClassLoader("E:\\JAVA\\项目\\javaenhance\\classloaderlib").loadClass("ClassLoaderAttachment");
-		Date da = (Date)cls.newInstance();
-		System.out.println(da);
-		
-		
-	}
+
+        Class<?> cls = new MyClassLoader("E:\\JAVA\\项目\\javaenhance\\classloaderlib").loadClass("ClassLoaderAttachment");
+        Date da = (Date) cls.newInstance();
+        System.out.println(da);
+
+
+    }
 
 }

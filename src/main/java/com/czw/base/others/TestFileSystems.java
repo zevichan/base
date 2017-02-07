@@ -8,8 +8,11 @@ public class TestFileSystems {
 
 	public static void main(String[] args) {
 		System.out.println(FileSystems.get());
-		System.out.println("=================");
+        System.out.println("=================");
 		System.out.println(FileSystems.getDefault());
+        int a = Integer.valueOf("xfweji");
+        System.out.println(a);
+
 	}
 
 }
