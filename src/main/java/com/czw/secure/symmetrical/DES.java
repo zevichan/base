@@ -10,6 +10,7 @@ import javax.crypto.NoSuchPaddingException;
 import javax.crypto.SecretKey;
 import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.DESKeySpec;
+import java.io.UnsupportedEncodingException;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 
@@ -63,9 +64,9 @@ public class DES {
     }
 
 
-    public static String encrypt(String data,String password){
+    public static String encrypt(String data,String password) throws UnsupportedEncodingException {
         BASE64Encoder base64Encoder = new BASE64Encoder();
-        return base64Encoder.encode(encrypt(data.getBytes(),password));
+        return base64Encoder.encode(encrypt(data.getBytes("UTF-8"),password));
     }
 
     public static byte[] decrypt(byte[] src, String password) throws Exception {
