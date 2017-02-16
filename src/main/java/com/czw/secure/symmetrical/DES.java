@@ -36,7 +36,7 @@ import java.security.SecureRandom;
  */
 public class DES {
 
-    private static final Logger log = LoggerFactory.getLogger(DES.class);
+    private static Logger log = LoggerFactory.getLogger(DES.class);
     private static SecureRandom secureRandom = new SecureRandom();
     private static SecretKeyFactory keyFactory;
     private static Cipher cipher;
