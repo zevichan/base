@@ -1,14 +1,12 @@
 package com.czw.spring.context;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * @author ZeviChen , 2017/2/16 0016 下午 12:44
  */
-public class DefBeanFactory {
+public class DefBeanFactory implements BeanFactory {
 
 
     //并发bean解析后的值
@@ -17,4 +15,10 @@ public class DefBeanFactory {
     public Map<String, BeanDefinition> getBeanDefinitionMap() {
         return beanDefinitionMap;
     }
+
+
+    public Object getBean(String name){
+        return beanDefinitionMap.get(name);
+    }
+
 }

@@ -8,7 +8,10 @@ public class FSContext extends AbstractFSContext {
     public FSContext(String configPath){
         resolvePath(configPath);
         refresh();
-
     }
 
+    @Override
+    public Object getBean(String name) {
+        return null;
+    }
 }
