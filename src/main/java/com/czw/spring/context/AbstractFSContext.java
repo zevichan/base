@@ -6,7 +6,7 @@ import org.slf4j.LoggerFactory;
 /**
  * @author ZeviChen , 2017/2/16 0016 上午 11:40
  */
-public abstract class AbstractFSContext implements BeanFactory{
+public abstract class AbstractFSContext extends BeanFactory{
 
     protected final Logger logger = LoggerFactory.getLogger(getClass());
 
@@ -28,7 +28,7 @@ public abstract class AbstractFSContext implements BeanFactory{
         //初始化DefBeanFactory并得到一个可以配置的ConfigureListableBeanFactory ,implements关系
         //refreshBeanFactory()加载xml配置文件，放入集合中
         DefBeanFactory beanFactory = obtainFreshBeanFactory();
-        this.beanFactory = beanFactory;
+        beanFactory = beanFactory;
 
         //设置beanfactory加载器
         //设置xml的解析器
@@ -132,8 +132,17 @@ public abstract class AbstractFSContext implements BeanFactory{
 
     //每次new都会重新解析加载xml bean到BeanFactory内存
     protected DefBeanFactory obtainFreshBeanFactory() {
-        //refreshBeanFactory();
-        return new DefBeanFactory();
+        //refreshBeanFactory(); -> loadBeanDefinitions(beanFactory); //解析xml
+
+
+        return loadBeanDefinitions(new DefBeanFactory());
+    }
+
+    protected DefBeanFactory loadBeanDefinitions(DefBeanFactory defBeanFactory) {
+
+
+
+        return defBeanFactory;
     }
 
 }
