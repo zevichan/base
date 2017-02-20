@@ -1,3 +1,3 @@
 <beans>
-    <bean id="merchant" class="com.czw.spring.context.Merchant"></bean>
+    <bean id="merchant" class="com.czw.spring.context.Merchant" init="init"></bean>
 </beans>

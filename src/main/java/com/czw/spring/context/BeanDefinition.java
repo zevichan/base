@@ -8,7 +8,9 @@ import java.util.Map;
  */
 public class BeanDefinition implements Cloneable {
 
-    private volatile Object beanClass;
+    //此处指定class路径
+    private String beanClass;
+    private String beanName;
 
     //常量定义在ConfigurableBeanFactory中
     private String scope = "singleton";
@@ -25,11 +27,20 @@ public class BeanDefinition implements Cloneable {
 
     private String initMethodName;
 
-    private String destroyMethodName;
-
-    public void setBeanClass(Object beanClass) {
+    public void setBeanClass(String beanClass) {
         this.beanClass = beanClass;
     }
+
+    public String getBeanName() {
+        return beanName;
+    }
+
+    public void setBeanName(String beanName) {
+        this.beanName = beanName;
+    }
+
+    private String destroyMethodName;
+
 
     public Object getBeanClass() {
         return beanClass;
@@ -97,5 +108,21 @@ public class BeanDefinition implements Cloneable {
 
     public void setDestroyMethodName(String destroyMethodName) {
         this.destroyMethodName = destroyMethodName;
+    }
+
+    @Override
+    public String toString() {
+        return "BeanDefinition{" +
+                "beanClass='" + beanClass + '\'' +
+                ", beanName='" + beanName + '\'' +
+                ", scope='" + scope + '\'' +
+                ", singleton=" + singleton +
+                ", prototype=" + prototype +
+                ", lazyInit=" + lazyInit +
+                ", factoryBeanName='" + factoryBeanName + '\'' +
+                ", factoryMethodName='" + factoryMethodName + '\'' +
+                ", initMethodName='" + initMethodName + '\'' +
+                ", destroyMethodName='" + destroyMethodName + '\'' +
+                '}';
     }
 }
