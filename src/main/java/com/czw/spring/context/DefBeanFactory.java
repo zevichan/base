@@ -6,7 +6,7 @@ import java.util.concurrent.ConcurrentHashMap;
 /**
  * @author ZeviChen , 2017/2/16 0016 下午 12:44
  */
-public class DefBeanFactory {
+public class DefBeanFactory implements BeanFactory {
 
 
     //并发bean解析后的值
@@ -16,15 +16,12 @@ public class DefBeanFactory {
         return beanDefinitionMap;
     }
 
-
-    public Map getBeanMap(){
-        return beanDefinitionMap;
-    }
-
     public Object getBean(String name){
-        return beanDefinitionMap.get(name);
+        return this.beanDefinitionMap.get(name);
     }
 
-
+    public void registerBeanDefinition(String beanName,BeanDefinition beanDefinition){
+        this.beanDefinitionMap.put(beanName,beanDefinition);
+    }
 
 }

@@ -4,6 +4,10 @@ import com.czw.util.ComUtils;
 import org.junit.Test;
 
 /**
+ *
+ *  AbstractRefreshableApplicationContext -> refreshBeanFactory()创建  = DefaultListableBeanFactory
+ *
+ *
  * @author ZeviChen , 2017/2/16 0016 下午 5:18
  */
 public class TestFSContext {
@@ -16,7 +20,7 @@ public class TestFSContext {
 //        Merchant merchant = (Merchant) fsContext.getBean("merchant");
 //        merchant.getMerchantName();
 
-        
+
 
     }
 }

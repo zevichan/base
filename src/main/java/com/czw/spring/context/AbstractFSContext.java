@@ -139,6 +139,7 @@ public abstract class AbstractFSContext extends BeanFactory{
     }
 
     protected DefBeanFactory loadBeanDefinitions(DefBeanFactory defBeanFactory) {
+        // XmlBeanDefinitionReader 读取xml中的数据
 
 
 
