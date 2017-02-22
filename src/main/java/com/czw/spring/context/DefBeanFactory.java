@@ -1,5 +1,9 @@
 package com.czw.spring.context;
 
+import com.czw.jichu.jdbc.Bean;
+import com.czw.util.ComUtils;
+
+import java.io.InputStream;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -16,38 +20,28 @@ public class DefBeanFactory implements BeanFactory {
         return beanDefinitionMap;
     }
 
-    public Object getBean(String name){
-//        String beanName = BeanFactoryUtils.transformedBeanName(name);
-//        Object bean = this.beans.get(beanName);
-//
-//        if (bean == null) {
-//            throw new NoSuchBeanDefinitionException(beanName,
-//                    "Defined beans are [" + StringUtils.collectionToCommaDelimitedString(this.beans.keySet()) + "]");
-//        }
-//
-//        // Don't let calling code try to dereference the
-//        // bean factory if the bean isn't a factory
-//        if (BeanFactoryUtils.isFactoryDereference(name) && !(bean instanceof FactoryBean)) {
-//            throw new BeanIsNotAFactoryException(beanName, bean.getClass());
-//        }
-//
-//        if (bean instanceof FactoryBean && !BeanFactoryUtils.isFactoryDereference(name)) {
-//            try {
-//                return ((FactoryBean) bean).getObject();
-//            }
-//            catch (Exception ex) {
-//                throw new BeanCreationException(beanName, "FactoryBean threw exception on object creation", ex);
-//            }
-//        }
-//        else {
-//            return bean;
-//        }
+    public Object getBean(String name) {
 
-        return this.beanDefinitionMap.get(name);
+        BeanDefinition obj = this.beanDefinitionMap.get(name);
+        String beanClassPath = (String) obj.getBeanClass();
+
+        Object beanObj = null;
+        try {
+            Class beanClass = Class.forName(beanClassPath);
+            beanObj = beanClass.newInstance();
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        } catch (InstantiationException e) {
+            e.printStackTrace();
+        }
+
+        return beanObj;
     }
 
-    public void registerBeanDefinition(String beanName,BeanDefinition beanDefinition){
-        this.beanDefinitionMap.put(beanName,beanDefinition);
+    public void registerBeanDefinition(String beanName, BeanDefinition beanDefinition) {
+        this.beanDefinitionMap.put(beanName, beanDefinition);
     }
 
 }

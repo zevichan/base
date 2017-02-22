@@ -46,7 +46,6 @@ public class XmlBeanDefinitionReader {
                 String beanName = element.attribute("id").getText();
                 definition.setBeanName(beanName);
                 String beanPath = element.attribute("class").getText();
-                beanPath = beanPath.substring(0,beanPath.lastIndexOf("."));
                 definition.setBeanClass(beanPath);
                 definition.setInitMethodName(element.attribute("init").getText());
                 defBeanFactory.registerBeanDefinition(beanName, definition);

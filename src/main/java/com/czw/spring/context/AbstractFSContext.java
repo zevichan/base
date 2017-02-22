@@ -145,6 +145,8 @@ public abstract class AbstractFSContext implements BeanFactory{
 
     @Override
     public Object getBean(String name) {
+
+
         return beanFactory.getBean(name);
     }
 }
