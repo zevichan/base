@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+
+
+    <xs:complexType name="propsEle">
+        <xs:attribute name="name" type="xs:string"/>
+    </xs:complexType>
+
+    <xs:complexType name="beanEle">
+        <xs:sequence>
+            <xs:element name="property" type="propsEle" minOccurs="0"/>
+        </xs:sequence>
+        <xs:attribute name="id" type="xs:string"/>
+        <xs:attribute name="class" type="xs:string"/>
+        <xs:attribute name="init-method" type="xs:string"/>
+        <xs:attribute name="destory-method" type="xs:string"/>
+    </xs:complexType>
+
+    <xs:complexType name="beansEle">
+        <xs:sequence>
+            <xs:element name="bean" type="beanEle" maxOccurs="unbounded"/>
+        </xs:sequence>
+        <xs:attribute name="default-autowire" type="xs:string"/>
+        <xs:attribute name="default-lazy-init" type="xs:string"/>
+    </xs:complexType>
+
+    <xs:element name="beans" type="beansEle"/>
+</xs:schema>

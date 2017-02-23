@@ -1,3 +1,9 @@
-<beans>
-    <bean id="merchant" class="com.czw.spring.context.Merchant" init="init"></bean>
+<beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:noNamespaceSchemaLocation="beans.xsd">
+
+
+
+    <bean id="merchant" class="com.czw.spring.context.Merchant" init-method="init"></bean>
+
+
 </beans>
