@@ -11,7 +11,7 @@
             <xs:element name="property" type="propsEle" minOccurs="0"/>
         </xs:sequence>
         <xs:attribute name="id" type="xs:string"/>
-        <xs:attribute name="class" type="xs:string"/>
+        <xs:attribute name="class" type="xs:string" use="required"/>
         <xs:attribute name="init-method" type="xs:string"/>
         <xs:attribute name="destory-method" type="xs:string"/>
     </xs:complexType>

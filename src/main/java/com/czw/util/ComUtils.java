@@ -107,6 +107,7 @@ public class ComUtils {
                 path = resPath + "." + path;
         }
 
+        //直接File.separator拼接就完事了，哪需要这么麻烦
         if ("\\".equals(File.separator)) {
             path = path.replace(".", "\\");
             filePath = rootPath + "\\" + path + "\\" + name;

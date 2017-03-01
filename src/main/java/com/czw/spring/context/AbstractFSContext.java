@@ -16,6 +16,7 @@ public abstract class AbstractFSContext implements BeanFactory{
 
     private DefBeanFactory beanFactory;
 
+    //并发锁
     private final Object beanFactoryMonitor = new Object();
 
     private final Object activeMonitor = new Object();
