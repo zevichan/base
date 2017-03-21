@@ -17,6 +17,7 @@ import java.text.ParseException;
 @Controller
 @RequestMapping("ehcache")
 public class EhcacheAction extends BaseAction{
+
 	@Autowired
 	private UserService userServiceImpl;
 

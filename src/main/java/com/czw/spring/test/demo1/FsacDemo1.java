@@ -1,4 +1,4 @@
-package com.czw.spring.demo1;
+package com.czw.spring.test.demo1;
 
 
 import com.czw.util.ComUtils;
@@ -12,7 +12,7 @@ public class FsacDemo1 {
 
     @Test
     public void test(){
-        String path = ComUtils.getFilePath("com.czw.spring.demo1","demo1.xml",true);
+        String path = ComUtils.getFilePath("com.czw.spring.test.demo1","demo1.xml",true);
         FileSystemXmlApplicationContext fsac = new FileSystemXmlApplicationContext(path);
         Thing1 t1 = (Thing1) fsac.getBean("thing1");
         t1.method1();
