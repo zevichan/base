@@ -4,9 +4,6 @@
     <groupId>com.czw.base</groupId>
     <artifactId>base</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <modules>
-        <module>../../lammal/newproject/app/dubbo-admin</module>
-    </modules>
     <packaging>pom</packaging>
 
     <dependencies>
