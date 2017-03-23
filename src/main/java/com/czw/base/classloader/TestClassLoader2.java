@@ -1,5 +1,6 @@
 package com.czw.base.classloader;
 
+import org.junit.Ignore;
 import org.junit.Test;
 
 /**
@@ -8,36 +9,40 @@ import org.junit.Test;
 public class TestClassLoader2 {
 
     @Test
+    @Ignore
     public void customClassLoader() throws ClassNotFoundException {
-        CustomAppClassLoader loader = new CustomAppClassLoader();
+        CustomUserClassLoader loader = new CustomUserClassLoader();
         ContextLoaderThread2 runner = new ContextLoaderThread2();
         runner.setClassLoader(loader);
-        System.out.println("1");
         runner.start();
-        System.out.println("2");
     }
+
+    @Test
+    public void customClassLoader2() throws ClassNotFoundException {
+        CustomUserClassLoader cucl = new CustomUserClassLoader();
+        Class clazz = cucl.findClass("Pet");
+        System.out.println(clazz.getClassLoader());
+    }
+
+
 }
 
 class ContextLoaderThread2 extends Thread {
 
-    private ClassLoader classLoader;
+    private CustomUserClassLoader classLoader;
 
     @Override
     public void run() {
-        System.out.println("3");
         Class cls = null;
         try {
-            System.out.println("6");
-            cls = classLoader.loadClass("com.czw.base.classloader.Pet");
-            System.out.println("7");
+            cls = classLoader.findClass("Pet");
         } catch (ClassNotFoundException e) {
-            System.out.println("5"+e.getMessage());
+            e.printStackTrace();
         }
-        System.out.println("thread class loader : " + cls);
-        System.out.println("4");
+        System.out.println("thread class loader : " + cls.getClassLoader());
     }
 
-    public void setClassLoader(ClassLoader classLoader) {
+    public void setClassLoader(CustomUserClassLoader classLoader) {
         this.classLoader = classLoader;
     }
 }
