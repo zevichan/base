@@ -18,10 +18,12 @@ public class TestClassLoader2 {
     }
 
     @Test
-    public void customClassLoader2() throws ClassNotFoundException {
+    public void customClassLoader2() throws ClassNotFoundException, IllegalAccessException, InstantiationException {
         CustomUserClassLoader cucl = new CustomUserClassLoader();
         Class clazz = cucl.findClass("Pet");
         System.out.println(clazz.getClassLoader());
+        System.out.println(clazz.newInstance().toString());
+        
     }
 
 

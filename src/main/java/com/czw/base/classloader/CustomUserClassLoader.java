@@ -2,7 +2,6 @@ package com.czw.base.classloader;
 
 import com.czw.util.ComUtils;
 import org.apache.commons.io.FileUtils;
-import org.apache.commons.lang3.StringUtils;
 import org.junit.Test;
 
 import java.io.File;
