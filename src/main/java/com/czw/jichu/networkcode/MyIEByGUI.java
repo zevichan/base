@@ -28,14 +28,14 @@ public class MyIEByGUI {
 		f.setLayout(new FlowLayout());
 		
 		tf=new TextField(60);
-		but=new Button("ת��");
+		but=new Button("???");
 		ta=new TextArea(25,70);
 		
-		d=new Dialog(f,"��ʾ��Ϣ-self",true);
+		d=new Dialog(f,"??????-self",true);
 		d.setBounds(400,200,240,150);
 		d.setLayout(new FlowLayout());
 		lab=new Label();
-		okBut=new Button("ȷ��");
+		okBut=new Button("???");
 		
 		d.add(lab);
 		d.add(okBut);
@@ -103,10 +103,10 @@ public class MyIEByGUI {
 		String path=url.substring(index2);
 		ta.setText(str+"...."+path);
 		
-		//����Ĵ����ȡurl���������ļ���ַ
+		//??????????url??????????????
 		
 		/*
-		 * ������ʾ�Ի���
+		 * ????????????
 		String dirPath=tf.getText();
 		File dir=new File(dirPath);
 		
@@ -122,13 +122,13 @@ public class MyIEByGUI {
 		}
 		else
 		{
-			String info="���������Ϣ:"+dirPath+"�Ǵ���ģ�������.";
+			String info="??????????:"+dirPath+"?????????????.";
 			lab.setText(info);
 			d.setVisible(true);
 		}
 		*/
 		
-		Socket s=new Socket(host,port);//�쳣UnknownHostException
+		Socket s=new Socket(host,port);//??UnknownHostException
 		
 		PrintWriter out=new PrintWriter(s.getOutputStream());//IOException
 		out.println("GET"+path+" HTTP/1.1");

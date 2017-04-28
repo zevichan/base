@@ -41,7 +41,7 @@ public class ChatFrame extends Frame {
         menuFile.setLabel("File");  
         menuFileExit.setLabel("Exit");  
           
-        // Add action listener.for the menu button  
+        // Add controller listener.for the menu button
         menuFileExit.addActionListener  
         (  
             new ActionListener() {  
