@@ -27,10 +27,10 @@ public class BarterHttpClient {
 
     @Test
     public void barter() throws IOException {
-        HttpPost httppost = new HttpPost("http://test.shopwall.cn/wxpay/wxcallback");
+        HttpPost httppost = new HttpPost("http://zevichen.me/wxpay/wxcallback");
         List<NameValuePair> formparams = new ArrayList<>();
-        formparams.add(new BasicNameValuePair("LoginName", "admin"));
-        formparams.add(new BasicNameValuePair("passWord", "123456"));
+        formparams.add(new BasicNameValuePair("username", "admin"));
+        formparams.add(new BasicNameValuePair("passWord", "admin"));
         UrlEncodedFormEntity uefEntity = new UrlEncodedFormEntity(formparams, "UTF-8");
         httppost.setEntity(uefEntity);
 
@@ -50,10 +50,10 @@ public class BarterHttpClient {
 
     @Before
     public void login() throws UnsupportedEncodingException {
-        HttpPost httppost = new HttpPost("http://test.shopwall.cn/wxpay/user/login");
+        HttpPost httppost = new HttpPost("http://zevichen.me/wxpay/user/login");
         List<NameValuePair> formparams = new ArrayList<>();
-        formparams.add(new BasicNameValuePair("LoginName", "lklklk"));
-        formparams.add(new BasicNameValuePair("passWord", "lklklk"));
+        formparams.add(new BasicNameValuePair("username", "admin"));
+        formparams.add(new BasicNameValuePair("passWord", "admin"));
         UrlEncodedFormEntity uefEntity = new UrlEncodedFormEntity(formparams, "UTF-8");
         httppost.setEntity(uefEntity);
 
