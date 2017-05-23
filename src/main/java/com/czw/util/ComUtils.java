@@ -38,7 +38,7 @@ public class ComUtils {
             rtn = endTime - startTime;
             if (rtn == endTime)
                 rtn = 0;
-            log.info("Spend Time:{}", endTime <= startTime ? 0 : rtn);
+            log.info("Spend Time:{}ms", endTime <= startTime ? 0 : rtn);
             out.println("--------------结束计时----------------");
         }
     }

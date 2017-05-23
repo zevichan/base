@@ -29,7 +29,7 @@ public class SimpleExample {
 
     @Test
     public void test1() throws IOException, ParseException {
-        System.setProperty("org.apache.logging.log4j.simplelog.StatusLogger.level","info");
+        System.setProperty("org.apache.logging.log4j.simplelog.StatusLogger.level", "info");
 
         Analyzer analyzer = new StandardAnalyzer();
 
@@ -56,7 +56,7 @@ public class SimpleExample {
         // Iterate through the results:
         for (int i = 0; i < hits.length; i++) {
             Document hitDoc = isearcher.doc(hits[i].doc);
-            System.out.println("This is the text to be indexed."+hitDoc.get("fieldname"));
+            System.out.println("This is the text to be indexed." + hitDoc.get("fieldname"));
         }
         ireader.close();
         directory.close();

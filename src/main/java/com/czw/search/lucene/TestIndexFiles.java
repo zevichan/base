@@ -2,6 +2,7 @@ package com.czw.search.lucene;
 
 
 import org.apache.lucene.analysis.Analyzer;
+import org.apache.lucene.analysis.cjk.CJKAnalyzer;
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.document.*;
 import org.apache.lucene.index.IndexWriter;
@@ -35,7 +36,7 @@ import java.nio.file.attribute.BasicFileAttributes;
 public class TestIndexFiles {
 
 
-    public static String indexPath = "D:\\gopj\\src\\github.com\\zevichen\\index-lucene";
+    public static String indexPath = "E:\\test\\files-index";
     public static String docsPath = "D:\\gopj\\src\\github.com\\zevichen\\dandelion";
 
     @Test
@@ -102,6 +103,8 @@ public class TestIndexFiles {
             // Note that FileReader expects the file to be in UTF-8 encoding.
             // If that's not the case searching for special characters will fail.
             doc.add(new TextField("contents", new BufferedReader(new InputStreamReader(stream, StandardCharsets.UTF_8))));
+            doc.add(new TextField("fileName",file.getFileName().toString(),Field.Store.YES));
+
 
             if (writer.getConfig().getOpenMode() == IndexWriterConfig.OpenMode.CREATE) {
                 // New index, so we just add the document (no old document can be there):

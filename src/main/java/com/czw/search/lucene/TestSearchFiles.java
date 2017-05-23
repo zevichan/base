@@ -1,6 +1,7 @@
 package com.czw.search.lucene;
 
 import org.apache.lucene.analysis.Analyzer;
+import org.apache.lucene.analysis.cjk.CJKAnalyzer;
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.index.DirectoryReader;
@@ -33,11 +34,11 @@ public class TestSearchFiles {
         System.setProperty("org.apache.logging.log4j.simplelog.StatusLogger.level","info");
 
         String queries = null;
-        String queryString = "init";
+        String queryString = "Engine AND init";
         int repeat = 1;
         String index = TestIndexFiles.indexPath;
         String field = "contents";
-        boolean raw = true;
+        boolean raw = false;//显式原始信息
         int hitsPerPage = 10;
 
         IndexReader reader = DirectoryReader.open(FSDirectory.open(Paths.get(index)));
@@ -126,7 +127,7 @@ public class TestSearchFiles {
             }
 
             end = Math.min(hits.length, start + hitsPerPage);
-
+            System.out.println("start:"+start+" end:"+end+" hitsPerPage:"+hitsPerPage);
             for (int i = start; i < end; i++) {
                 if (raw) {                              // output raw format
                     System.out.println("doc="+hits[i].doc+" score="+hits[i].score+" hits="+hits[i].toString());
@@ -136,6 +137,9 @@ public class TestSearchFiles {
                 Document doc = searcher.doc(hits[i].doc);
                 String path = doc.get("path");
                 if (path != null) {
+                    System.out.println("File Path : "+doc.get("path"));
+                    System.out.println("File Name : "+doc.get("fileName"));
+                    System.out.println("File modified : "+doc.get("modified"));
                     System.out.println((i+1) + ". " + path);
                     String title = doc.get("title");
                     if (title != null) {
@@ -144,6 +148,7 @@ public class TestSearchFiles {
                 } else {
                     System.out.println((i+1) + ". " + "No path for this document");
                 }
+                System.out.println("-----------------------------------");
 
             }
 
