@@ -21,6 +21,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.czw.util.ComUtils;
 import org.apache.lucene.analysis.core.WhitespaceAnalyzer;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.facet.DrillDownQuery;
@@ -41,6 +42,7 @@ import org.apache.lucene.index.IndexWriterConfig;
 import org.apache.lucene.index.IndexWriterConfig.OpenMode;
 import org.apache.lucene.search.IndexSearcher;
 import org.apache.lucene.search.MatchAllDocsQuery;
+import org.apache.lucene.search.ScoreDoc;
 import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.RAMDirectory;
 
@@ -73,41 +75,49 @@ public class SimpleFacetsExample {
         Document doc = new Document();
         doc.add(new FacetField("Author", "Bob"));
         doc.add(new FacetField("Publish Date", "2010", "10", "15"));
+        doc.add(new FacetField("Category","art"));
         indexWriter.addDocument(config.build(taxoWriter, doc));
 
         doc = new Document();
         doc.add(new FacetField("Author", "Bob"));
         doc.add(new FacetField("Publish Date", "2010", "10", "15"));
+        doc.add(new FacetField("Category","biography"));
         indexWriter.addDocument(config.build(taxoWriter, doc));
 
         doc = new Document();
         doc.add(new FacetField("Author", "Lisa"));
         doc.add(new FacetField("Publish Date", "2010", "10", "20"));
+        doc.add(new FacetField("Category","fiction"));
         indexWriter.addDocument(config.build(taxoWriter, doc));
 
         doc = new Document();
         doc.add(new FacetField("Author", "Lisa"));
         doc.add(new FacetField("Publish Date", "2012", "1", "1"));
+        doc.add(new FacetField("Category","food"));
         indexWriter.addDocument(config.build(taxoWriter, doc));
 
         doc = new Document();
         doc.add(new FacetField("Author", "Susan"));
         doc.add(new FacetField("Publish Date", "2012", "1", "7"));
+        doc.add(new FacetField("Category","science"));
         indexWriter.addDocument(config.build(taxoWriter, doc));
 
         doc = new Document();
         doc.add(new FacetField("Author", "Frank"));
         doc.add(new FacetField("Publish Date", "1999", "5", "5"));
+        doc.add(new FacetField("Category","crime"));
         indexWriter.addDocument(config.build(taxoWriter, doc));
 
         doc = new Document();
         doc.add(new FacetField("Author", "Frank"));
         doc.add(new FacetField("Publish Date", "2011", "5", "15"));
+        doc.add(new FacetField("Category","fiction"));
         indexWriter.addDocument(config.build(taxoWriter, doc));
 
         doc = new Document();
         doc.add(new FacetField("Author", "Frank"));
         doc.add(new FacetField("Publish Date", "2017", "6", "5"));
+        doc.add(new FacetField("Category","science"));
         indexWriter.addDocument(config.build(taxoWriter, doc));
 
         indexWriter.close();
@@ -136,6 +146,7 @@ public class SimpleFacetsExample {
         Facets facets = new FastTaxonomyFacetCounts(taxoReader, config, fc);
         results.add(facets.getTopChildren(10, "Author"));
         results.add(facets.getTopChildren(10, "Publish Date"));
+        results.add(facets.getTopChildren(10, "Category"));
 
         indexReader.close();
         taxoReader.close();
@@ -166,6 +177,7 @@ public class SimpleFacetsExample {
 
         results.add(facets.getTopChildren(10, "Author"));
         results.add(facets.getTopChildren(10, "Publish Date"));
+        results.add(facets.getTopChildren(10, "Category"));
 
         indexReader.close();
         taxoReader.close();
@@ -187,7 +199,7 @@ public class SimpleFacetsExample {
         DrillDownQuery q = new DrillDownQuery(config);
 
         // Now user drills down on Publish Date/2010:
-        q.add("Publish Date", "2011");
+        q.add("Publish Date", "2010");
         FacetsCollector fc = new FacetsCollector();
         FacetsCollector.search(searcher, q, 10, fc);
 
@@ -216,13 +228,16 @@ public class SimpleFacetsExample {
         DrillDownQuery q = new DrillDownQuery(config);
 
         // Now user drills down on Publish Date/2010:
-        q.add("Publish Date", "2012");
+        q.add("Publish Date", "2010");
 
         DrillSideways ds = new DrillSideways(searcher, config, taxoReader);
         DrillSidewaysResult result = ds.search(q, 10);
 
         // Retrieve results
         List<FacetResult> facets = result.facets.getAllDims(10);
+        System.out.println("totalHits:"+result.hits.totalHits);
+        ScoreDoc[] docs = result.hits.scoreDocs;
+        System.out.println(searcher.doc(docs[0].doc));
 
         indexReader.close();
         taxoReader.close();
@@ -266,30 +281,36 @@ public class SimpleFacetsExample {
      * Runs the search and drill-down examples and prints the results.
      */
     public static void main(String[] args) throws Exception {
-        System.setProperty("org.apache.logging.log4j.simplelog.StatusLogger.level", "trace");
+//        System.setProperty("org.apache.logging.log4j.simplelog.StatusLogger.level", "trace");
 
         System.out.println("Facet counting example:");
-        System.out.println("-----------------------");
+        ComUtils.start();
         SimpleFacetsExample example = new SimpleFacetsExample();
         List<FacetResult> results1 = example.runFacetOnly();
         System.out.println("Author: " + results1.get(0));
         System.out.println("Publish Date: " + results1.get(1));
+        System.out.println("Category: " + results1.get(2));
+        ComUtils.end();
 
         System.out.println("Facet counting example (combined facets and search):");
-        System.out.println("-----------------------");
+        ComUtils.start();
         List<FacetResult> results = example.runSearch();
         System.out.println("Author: " + results.get(0));
         System.out.println("Publish Date: " + results.get(1));
+        System.out.println("Category: " + results1.get(2));
+        ComUtils.end();
 
         System.out.println("Facet drill-down example (Publish Date/2011):");
-        System.out.println("---------------------------------------------");
+        ComUtils.start();
         System.out.println("Author: " + example.runDrillDown());
+        ComUtils.end();
 
         System.out.println("Facet drill-sideways example (Publish Date/2012):");
-        System.out.println("---------------------------------------------");
+        ComUtils.start();
         for (FacetResult result : example.runDrillSideways()) {
             System.out.println(result);
         }
+        ComUtils.end();
     }
 
 }

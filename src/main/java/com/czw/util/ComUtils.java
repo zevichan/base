@@ -22,24 +22,28 @@ public class ComUtils {
     private static Logger log = LoggerFactory.getLogger(ComUtils.class);
 
     public static void start() {
-        flag = true;
-        out.println("--------------开始计时----------------");
-        startTime = System.currentTimeMillis();
+        synchronized (ComUtils.class) {
+            flag = true;
+            out.println("--------------开始计时----------------");
+            startTime = System.currentTimeMillis();
+        }
     }
 
     public static void end() {
-        if (flag) {
-            endTime = System.currentTimeMillis();
-            long rtn = 0;
-            if (startTime < 0)
-                startTime = 0;
-            if (endTime < 0)
-                endTime = 0;
-            rtn = endTime - startTime;
-            if (rtn == endTime)
-                rtn = 0;
-            log.info("Spend Time:{}ms", endTime <= startTime ? 0 : rtn);
-            out.println("--------------结束计时----------------");
+        synchronized (ComUtils.class) {
+            if (flag) {
+                endTime = System.currentTimeMillis();
+                long rtn = 0;
+                if (startTime < 0)
+                    startTime = 0;
+                if (endTime < 0)
+                    endTime = 0;
+                rtn = endTime - startTime;
+                if (rtn == endTime)
+                    rtn = 0;
+                log.info("Spend Time:{}ms", endTime <= startTime ? 0 : rtn);
+                out.println("--------------结束计时----------------");
+            }
         }
     }
 
@@ -202,25 +206,25 @@ public class ComUtils {
      * @return
      */
     @SuppressWarnings("unchecked")
-	public static <T extends Serializable> T clone(T obj) {
+    public static <T extends Serializable> T clone(T obj) {
         T cloneObj = null;
         ByteArrayOutputStream output = null;
         ObjectOutputStream oos = null;
         ByteArrayInputStream input = null;
         ObjectInputStream ois = null;
-        try{
-        	output = new ByteArrayOutputStream();
-        	oos = new ObjectOutputStream(output);
-        	oos.writeObject(obj);
-        	
-        	input = new ByteArrayInputStream(output.toByteArray());
-        	ois = new ObjectInputStream(input);
+        try {
+            output = new ByteArrayOutputStream();
+            oos = new ObjectOutputStream(output);
+            oos.writeObject(obj);
+
+            input = new ByteArrayInputStream(output.toByteArray());
+            ois = new ObjectInputStream(input);
             cloneObj = (T) ois.readObject();
         } catch (IOException | ClassNotFoundException e) {
             e.printStackTrace();
-        }finally {
-			//close
-		}
+        } finally {
+            //close
+        }
         return cloneObj;
     }
 

@@ -21,7 +21,7 @@ public final class JdbcUtils {
 //            Class.forName("com.mysql.cj.jdbc.Driver");
             Properties prop = new Properties();
             prop.setProperty("driverClassName", "com.mysql.cj.jdbc.Driver");
-            prop.setProperty("password", "lammal");
+            prop.setProperty("password", "123456");
             prop.setProperty("username", "root");
             prop.setProperty("url", "jdbc:mysql://192.168.1.121:3306/pp_app?useUnicode=true&characterEncoding=UTF-8&zeroDateTimeBehavior=convertToNull&allowMultiQueries=true");
 
