@@ -1,6 +1,7 @@
 package com.czw.search.lucene;
 
 
+import com.czw.util.DateUtils;
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.cjk.CJKAnalyzer;
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
@@ -12,14 +13,12 @@ import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.FSDirectory;
 import org.junit.Test;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.net.URISyntaxException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.*;
 import java.nio.file.attribute.BasicFileAttributes;
+import java.util.Date;
 
 /**
  * https://lucene.apache.org/core/6_5_1/core/overview-summary.html#overview.description
@@ -96,7 +95,9 @@ public class TestIndexFiles {
             // year/month/day/hour/minutes/seconds, down the resolution you require.
             // For example the long value 2011021714 would mean
             // February 17, 2011, 2-3 PM.
-            doc.add(new LongPoint("modified", lastModified));
+            Date d = new Date();
+            d.setTime(lastModified);
+            doc.add(new TextField("modified", DateUtils.dtts(d),Field.Store.YES));
 
             // Add the contents of the file to a field named "contents".  Specify a Reader,
             // so that the text of the file is tokenized and indexed, but not stored.
@@ -104,6 +105,7 @@ public class TestIndexFiles {
             // If that's not the case searching for special characters will fail.
             doc.add(new TextField("contents", new BufferedReader(new InputStreamReader(stream, StandardCharsets.UTF_8))));
             doc.add(new TextField("fileName",file.getFileName().toString(),Field.Store.YES));
+            doc.add(new TextField("fileSize",file.toFile().length()+"B",Field.Store.YES));
 
 
             if (writer.getConfig().getOpenMode() == IndexWriterConfig.OpenMode.CREATE) {

@@ -28,7 +28,7 @@ import java.security.SecureRandom;
  * 4.输出反馈模式（OFB）
  *
  * PKCS5Padding是填充模式，还有其它的填充模式：
- * 然后，cipher.init（)一共有三个参数：Cipher.ENCRYPT_MODE, key, zeroIv，zeroIv就是初始化向量。
+ * 然后，cipher.init（)一共有三个参数：Cipher.ENCRYPT_MODE, key, zeroI`v，zeroIv就是初始化向量。
  * 工作模式、填充模式、初始化向量这三种因素一个都不能少。否则，如果你不指定的话，那么就要程序就要调用默认实现。
  *
  *

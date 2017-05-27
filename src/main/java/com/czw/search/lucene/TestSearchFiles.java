@@ -1,5 +1,6 @@
 package com.czw.search.lucene;
 
+import com.czw.util.ComUtils;
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.cjk.CJKAnalyzer;
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
@@ -30,11 +31,12 @@ public class TestSearchFiles {
 
     @Test
     public void searchFiles() throws IOException, ParseException {
+        ComUtils.start();
 
         System.setProperty("org.apache.logging.log4j.simplelog.StatusLogger.level","info");
 
         String queries = null;
-        String queryString = "Engine AND init";
+        String queryString = "init";
         int repeat = 1;
         String index = TestIndexFiles.indexPath;
         String field = "contents";
@@ -88,7 +90,10 @@ public class TestSearchFiles {
                 break;
             }
         }
+
+        ComUtils.end();
         reader.close();
+
     }
 
     /**
@@ -110,6 +115,7 @@ public class TestSearchFiles {
 
         int numTotalHits = results.totalHits;
         System.out.println(numTotalHits + " total matching documents");
+        System.out.println("-----------------------------------");
 
         int start = 0;
         int end = Math.min(numTotalHits, hitsPerPage);
@@ -140,6 +146,7 @@ public class TestSearchFiles {
                     System.out.println("File Path : "+doc.get("path"));
                     System.out.println("File Name : "+doc.get("fileName"));
                     System.out.println("File modified : "+doc.get("modified"));
+                    System.out.println("File Size : "+doc.get("fileSize"));
                     System.out.println((i+1) + ". " + path);
                     String title = doc.get("title");
                     if (title != null) {
