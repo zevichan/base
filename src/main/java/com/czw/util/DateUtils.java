@@ -173,8 +173,8 @@ public class DateUtils {
     /**
      * 功能：返回传入日期对象（date）之后beforeMonth月数的日期对象
      *
-     * @param date       日期对象
-     * @param beforeDays 往前月数
+     * @param date        日期对象
+     * @param beforeMonth 往前月数
      * @return java.util.Date 返回值
      */
     public static Date getBeforeMonth(Date date, int beforeMonth) {

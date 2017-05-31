@@ -118,8 +118,8 @@ public class TestJdbcGoods {
     public static void main(String[] args) throws IOException, SQLException, ParseException, InvalidTokenOffsetsException {
         System.setProperty("org.apache.logging.log4j.simplelog.StatusLogger.level", "INFO");//log4j set trace log.
         ComUtils.start();
-//        createIndex();
-        doSearch();
+        createIndex();
+//        doSearch();
         ComUtils.end();
     }
 
