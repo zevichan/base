@@ -33,6 +33,7 @@ public class TestQuery {
         Query q2 = queryParserSearch();
         Query q3 = phraseQuerySearch();
 
+
         inputQuery(q3);
     }
 
