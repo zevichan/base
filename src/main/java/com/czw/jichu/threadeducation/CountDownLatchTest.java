@@ -4,6 +4,11 @@ import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+/**
+ * 计数器:
+ * 		order: 3子线程await,1个主线程countDown,唤醒3个子线程运行
+ * 		answer: 1主线程await,3个子线程countDown,唤醒1个主线程继续最后的结果
+ */
 public class CountDownLatchTest {
 
 	public static void main(String[] args) {
