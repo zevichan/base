@@ -1,4 +1,4 @@
-package com.czw.concurrency;
+package com.czw.concurrent;
 
 
 import org.testng.annotations.AfterTest;

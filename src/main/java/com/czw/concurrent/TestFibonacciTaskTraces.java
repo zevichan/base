@@ -1,4 +1,4 @@
-package com.czw.concurrency;
+package com.czw.concurrent;
 
 import org.junit.Assert;
 import org.junit.Test;
