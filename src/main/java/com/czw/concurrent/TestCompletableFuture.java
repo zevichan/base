@@ -16,7 +16,7 @@ import java.util.function.Supplier;
 
 /**
  * java中提供的新的异步回调的合成和组合事件处理方式
- *
+ * <p>
  * 场景:从不同的db中异步获取数据,并最终汇集.基于thenComposeAsync
  *
  * @author ZeviChen , 2017/6/5 10:48
@@ -29,75 +29,101 @@ public class TestCompletableFuture {
 
         ExecutorService executor = Executors.newFixedThreadPool(5);
 
-        CompletableFuture<String> resultCompletableFuture = CompletableFuture.supplyAsync(new Supplier<String>() {
-            @Override
-            public String get() {
+        CompletableFuture<String> resultCompletableFuture = CompletableFuture.supplyAsync(() -> {
 
-                System.out.println(Thread.currentThread().getName() + " running");
-                try {
-                    TimeUnit.SECONDS.sleep(1);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-                return Thread.currentThread().getName() + " done";
+            System.out.println(Thread.currentThread().getName() + " running");
+            try {
+                TimeUnit.SECONDS.sleep(1);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
             }
+            return Thread.currentThread().getName() + " done";
         }, executor);
         System.out.println("main thread Get:" + resultCompletableFuture.get());
     }
 
+    /**
+     * 结果完成时的处理
+     *
+     * @throws ExecutionException
+     * @throws InterruptedException
+     */
     @Test
     @Ignore
-    public void test2() throws ExecutionException, InterruptedException {
+    public void testWhenComplete() throws ExecutionException, InterruptedException {
 
         ExecutorService executor = Executors.newFixedThreadPool(5);
 
-        CompletableFuture<String> resultCompletableFuture = CompletableFuture.supplyAsync(new Supplier<String>() {
-            @Override
-            public String get() {
-                try {
-                    TimeUnit.SECONDS.sleep(1);
-                    System.out.println(Thread.currentThread().getName());
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-                return "hello";
+        CompletableFuture<String> resultCompletableFuture = CompletableFuture.supplyAsync(() -> {
+            try {
+                TimeUnit.SECONDS.sleep(1);
+                System.out.println(Thread.currentThread().getName());
+            } catch (InterruptedException e) {
+                e.printStackTrace();
             }
+            return "hello";
         }, executor);
-        System.out.println(resultCompletableFuture.thenAccept(new Consumer<String>() {
-            @Override
-            public void accept(String t) {
-                System.out.println(Thread.currentThread().getName() + " result:" + t);
-            }
-        }));
-        System.out.println(123);
+        System.out.println(resultCompletableFuture.whenCompleteAsync((t, e) ->
+                System.out.println(Thread.currentThread().getName() + " result:" + t)));
+        System.out.println("whenComplete done.");
     }
 
+    /**
+     * 纯消费(执行action)
+     *
+     * @throws ExecutionException
+     * @throws InterruptedException
+     */
     @Test
     @Ignore
-    public void test3() throws ExecutionException, InterruptedException {
+    public void testThenAccept() throws ExecutionException, InterruptedException {
 
         ExecutorService executor = Executors.newFixedThreadPool(5);
 
-        CompletableFuture<String> resultCompletableFuture = CompletableFuture.supplyAsync(new Supplier<String>() {
-            @Override
-            public String get() {
-                try {
-                    TimeUnit.SECONDS.sleep(1);
-                    System.out.println(Thread.currentThread().getName());
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-                return "hello";
-            }
-        }, executor);
-        resultCompletableFuture.thenAcceptAsync(new Consumer<String>() {
-            @Override
-            public void accept(String t) {
-                System.out.println(t);
+        CompletableFuture<String> resultCompletableFuture = CompletableFuture.supplyAsync(() -> {
+            try {
+                TimeUnit.SECONDS.sleep(1);
                 System.out.println(Thread.currentThread().getName());
+            } catch (InterruptedException e) {
+                e.printStackTrace();
             }
+            return "hello";
         }, executor);
-        System.out.println(123);
+        resultCompletableFuture.thenAcceptAsync(System.out::println);
+        System.out.println("thenAccept done.");
+    }
+
+    /**
+     * thenRun不使用CompletableFuture的返回结果,另外的Runnable在future result后执行
+     *
+     * @throws ExecutionException
+     * @throws InterruptedException
+     */
+    @Test
+    @Ignore
+    public void testThenRun() throws ExecutionException, InterruptedException {
+        CompletableFuture<Integer> future = CompletableFuture.supplyAsync(() -> {
+            return 100;
+        });
+        CompletableFuture<Void> f = future.thenRun(() -> System.out.println("finished"));
+        System.out.println(f.get());
+
+    }
+
+    /**
+     * 组合多个Future的结果
+     *
+     * @throws ExecutionException
+     * @throws InterruptedException
+     */
+    @Test
+    @Ignore
+    public void testThenAcceptBoth() throws ExecutionException, InterruptedException {
+        CompletableFuture<Integer> future = CompletableFuture.supplyAsync(() -> {
+            return 100;
+        });
+        CompletableFuture<Void> f = future.thenAcceptBoth(CompletableFuture.completedFuture(10), (x, y) -> System.out.println(x * y));
+        System.out.println(f.get());
     }
 
     /**
@@ -114,12 +140,12 @@ public class TestCompletableFuture {
                 CompletableFuture.runAsync(() -> work("b1")), () -> work("c1")).get();
     }
 
-    Random random = new Random();
+    Random rdm = new Random();
 
     public Void work(String name) {
         System.out.println(name + " starts at " + LocalTime.now());
         try {
-            TimeUnit.SECONDS.sleep(random.nextInt(8));
+            TimeUnit.SECONDS.sleep(rdm.nextInt(8));
         } catch (InterruptedException e) {
         }
         System.out.println(name + " ends at " + LocalTime.now());
@@ -168,12 +194,9 @@ public class TestCompletableFuture {
             return "zero";
         }, executor);
 
-        CompletableFuture<Integer> f2 = f1.thenApply(new Function<String, Integer>() {
-            @Override
-            public Integer apply(String t) {
-                System.out.println(2);
-                return Integer.valueOf(t.length());
-            }
+        CompletableFuture<Integer> f2 = f1.thenApply(t -> {
+            System.out.println(2);
+            return Integer.valueOf(t.length());
         });
 
         CompletableFuture<Double> f3 = f2.thenApply(r -> r * 2.0);
@@ -198,27 +221,31 @@ public class TestCompletableFuture {
 
     /**
      * tenComposeAsync链式操作返回CompletableFuture
+     * <p>
+     * 组合
      *
      * @throws ExecutionException
      * @throws InterruptedException
      */
     @Test
+    @Ignore
     public void testThenComposeAsync() throws ExecutionException, InterruptedException {
         CompletableFuture<Long> f = CompletableFuture.supplyAsync(() -> longTask(1000000))
                 .thenComposeAsync(TestCompletableFuture::getResultFuture);
         Long result = f.get();
         System.out.println(result);
     }
+
     public Optional<List<Integer>> longTask(Integer i) {
         if (i > 0) {
             List<Integer> list = new ArrayList<>();
-            for(int pc = 0; pc < i; pc++)
+            for (int pc = 0; pc < i; pc++)
                 list.add(pc);
             return Optional.of(list);
-        }
-        else
+        } else
             return Optional.empty();
     }
+
     public static CompletableFuture<Long> getResultFuture(Optional<List<Integer>> op) {
         return CompletableFuture.supplyAsync(() -> {
             if (op.isPresent())
@@ -229,5 +256,76 @@ public class TestCompletableFuture {
                 return -1L;
         });
     }
+
+    @Test
+    @Ignore
+    public void testThenCombine() throws ExecutionException, InterruptedException {
+        CompletableFuture<Integer> future = CompletableFuture.supplyAsync(() -> 100);
+        CompletableFuture<String> future2 = CompletableFuture.supplyAsync(() -> "abc");
+        CompletableFuture<String> f = future.thenCombine(future2, (x, y) -> y + "-" + x);
+        System.out.println(f.get()); //abc-100
+    }
+
+
+    @Test
+//    @Ignore
+    public void testAllofAndAnyOf() {
+        CompletableFuture[] futures = {CompletableFuture.supplyAsync(TestCompletableFuture::randomDelay),
+                CompletableFuture.supplyAsync(TestCompletableFuture::randomDelay),
+                CompletableFuture.supplyAsync(TestCompletableFuture::randomDelay)};
+
+//        CompletableFuture.allOf(futures).join();
+        CompletableFuture.anyOf(futures).join();
+
+        System.out.println("all timeout process end");
+    }
+
+    private static final Random random = new Random();
+
+    public static String randomDelay() {
+        int delay = 500 + random.nextInt(2000);
+        try {
+            //How to use String.format. Ref:http://blog.csdn.net/lonely_fireworks/article/details/7962171/
+            System.out.println(String.format("%s sleep in %d", Thread.currentThread().getName(), delay));
+            Thread.sleep(delay);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        System.out.println(String.format("%s sleep in %s", Thread.currentThread().getName(), "end"));
+        return Thread.currentThread().getName() + " return";
+    }
+
+    /**
+     * acceptEither方法是当任意一个CompletionStage完成的时候，action这个消费者就会被执行。这个方法返回CompletableFuture<Void>
+     * applyToEither方法是当任意一个CompletionStage完成的时候，fn会被执行，它的返回值会当作新的CompletableFuture<U>的计算结果
+     *
+     * @throws ExecutionException
+     * @throws InterruptedException
+     */
+    @Test
+    @Ignore
+    public void testThenEither() throws ExecutionException, InterruptedException {
+        Random rand = new Random();
+        CompletableFuture<Integer> future = CompletableFuture.supplyAsync(() -> {
+            try {
+
+                TimeUnit.MILLISECONDS.sleep(2);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            return 100;
+        });
+        CompletableFuture<Integer> future2 = CompletableFuture.supplyAsync(() -> {
+            try {
+                TimeUnit.SECONDS.sleep(1);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            return 200;
+        });
+        CompletableFuture<String> f = future.applyToEither(future2, i -> i.toString());
+        System.out.println(f.get());
+    }
+
 }
 

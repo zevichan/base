@@ -7,6 +7,11 @@ import org.testng.annotations.Test;
 import java.util.concurrent.atomic.AtomicInteger;
 
 /**
+ * volatile将线程缓存中的数据更改实时写入主存中,便于其他CPU上的线程读取.
+ * 使用volatile定义的数据结构,每个volatile定义的字段只由一个线程进行写操作,
+ * 可以实现非阻塞的数据结构,所以该关键字并不是用来定义原子操作的.
+ *
+ *
  * @author ZeviChen , 2017/6/2 15:21
  */
 public class TestCount {
