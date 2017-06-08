@@ -8,7 +8,7 @@ import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
 import org.springframework.boot.autoconfigure.mongo.MongoAutoConfiguration;
 
 /**
- * application only can put in resouces/ or resources/config/ or src/ or src/config/
+ * application.properties only can put in resouces/ or resources/config/ or src/ or src/config/
  *
  * @author ZeviChen , 2017/6/8 10:00
  */
