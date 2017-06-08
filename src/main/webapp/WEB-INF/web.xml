@@ -40,7 +40,7 @@
     <security-constraint>
         <web-resource-collection>
             <!--可选,如果不设置,表示将禁止所有 HTTP 方法访问相应的资源-->
-            <http-method>GET</http-method>
+            <!--<http-method>GET</http-method>-->
             <web-resource-name>protect res package</web-resource-name>
             <url-pattern>/res/*</url-pattern>
         </web-resource-collection>
@@ -148,12 +148,12 @@
         <!--会话跟踪方式,COOKIE和sessionid参数url重写，tomcat7中加入SSL跟踪-->
         <tracking-mode>COOKIE</tracking-mode>
         <!--分钟-->
-        <session-timeout>20</session-timeout>
-        <cookie-config>
+        <!--<session-timeout>20</session-timeout>-->
+        <!--<cookie-config>
             <domain>www.google.com</domain>
             <comment>local domain</comment>
             <max-age>120000</max-age>
-        </cookie-config>
+        </cookie-config>-->
     </session-config>
 
     <env-entry>

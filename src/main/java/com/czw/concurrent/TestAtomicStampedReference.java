@@ -4,6 +4,8 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicStampedReference;
 
 /**
+ * REF:https://apereo.github.io/cas/4.2.x/planning/Architecture.html
+ *
  * CAS:内存中存在v,提供旧值a和新值b，如果v和a相同,就把v修改为b.
  * CAS中存在的问题,v可能在修改前被另外一个操作从a修改为c在修改为a过.所以
  * ABA就是解决这种问题问题而存在的,记录v的修改状态,确保在另一个操作修改过这个值,
