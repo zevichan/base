@@ -11,6 +11,7 @@ import javax.servlet.http.HttpSession;
  */
 //@RestController
 @Controller
+@RequestMapping("/index")
 public class HomeController {
 
     @RequestMapping("/")

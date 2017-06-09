@@ -1,4 +1,4 @@
-package com.czw.function.sso.middleware.cas.client.config;
+package com.czw.function.sso.middleware.cas.client.service.security.config;
 
 import com.czw.function.sso.middleware.cas.client.service.security.CustomUserDetailsService;
 import org.jasig.cas.client.session.SingleSignOutFilter;
@@ -20,6 +20,9 @@ import org.springframework.security.core.userdetails.AuthenticationUserDetailsSe
 import org.springframework.security.web.authentication.logout.LogoutFilter;
 import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 
+/**
+ * @author ZeviChen , 2017/6/9 09:39
+ */
 @Configuration
 @EnableWebSecurity //启用web权限
 @EnableGlobalMethodSecurity(prePostEnabled = true) //启用方法验证

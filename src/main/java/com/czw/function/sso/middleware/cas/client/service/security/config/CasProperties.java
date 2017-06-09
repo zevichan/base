@@ -1,26 +1,29 @@
-package com.czw.function.sso.middleware.cas.client.config;
+package com.czw.function.sso.middleware.cas.client.service.security.config;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
+/**
+ * @author ZeviChen , 2017/6/9 09:39
+ */
 @Component
-public class CasProperties {  
+public class CasProperties {
     @Value("${cas.server.host.url}")
-    private String casServerUrl;  
-  
-    @Value("${cas.server.host.login_url}")  
-    private String casServerLoginUrl;  
-  
-    @Value("${cas.server.host.logout_url}")  
-    private String casServerLogoutUrl;  
-  
-    @Value("${app.server.host.url}")  
-    private String appServerUrl;  
-  
-    @Value("${app.login.url}")  
-    private String appLoginUrl;  
-  
-    @Value("${app.logout.url}")  
+    private String casServerUrl;
+
+    @Value("${cas.server.host.login_url}")
+    private String casServerLoginUrl;
+
+    @Value("${cas.server.host.logout_url}")
+    private String casServerLogoutUrl;
+
+    @Value("${app.server.host.url}")
+    private String appServerUrl;
+
+    @Value("${app.login.url}")
+    private String appLoginUrl;
+
+    @Value("${app.logout.url}")
     private String appLogoutUrl;
 
     public String getCasServerUrl() {
