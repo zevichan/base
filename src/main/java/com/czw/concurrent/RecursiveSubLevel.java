@@ -4,6 +4,7 @@ package com.czw.concurrent;
 */
 /**
  * 子类层级太多,根据ForkJoin实现的查询,4层子结构
+ *
  * @author ZeviChen , 2017/6/22 17:48
  *//*
 
@@ -21,6 +22,8 @@ public class RecursiveSubLevel {
 }
 
 class Task extends RecursiveTask<Map<String, Object>> {
+
+    private static Logger log = Logger.getLoggerFactory(getClass());
 
     // 每个"小任务"最多只打印50个数
     private static final int MAX = 1;
@@ -80,11 +83,16 @@ class Task extends RecursiveTask<Map<String, Object>> {
             Map<String, Object> rm = null;
             try {
                 lm = left.get();
+            } catch (InterruptedException|ExecutionException e) {
+                log.error(e.getMessage());
+                return null;
+            }
+
+            try {
                 rm = right.get();
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            } catch (ExecutionException e) {
-                e.printStackTrace();
+            } catch (InterruptedException|ExecutionException e) {
+                log.error(e.getMessage());
+                return null;
             }
 
             if (lm != null && rm == null)
