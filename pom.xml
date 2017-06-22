@@ -132,11 +132,11 @@
             <artifactId>log4j</artifactId>
             <version>1.2.17</version>
         </dependency>-->
-        <!--<dependency>
+        <dependency>
             <groupId>org.apereo.cas</groupId>
             <artifactId>cas-server-webapp</artifactId>
             <version>${cas.version}</version>
-        </dependency>-->
+        </dependency>
 
 
         <!-- test framework -->

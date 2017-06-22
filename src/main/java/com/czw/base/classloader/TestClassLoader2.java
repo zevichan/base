@@ -23,7 +23,7 @@ public class TestClassLoader2 {
         Class clazz = cucl.findClass("Pet");
         System.out.println(clazz.getClassLoader());
         System.out.println(clazz.newInstance().toString());
-        
+
     }
 
 
