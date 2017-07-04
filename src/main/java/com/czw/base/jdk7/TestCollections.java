@@ -14,7 +14,7 @@ public class TestCollections {
 
     @Test
     public void test() {
-
+        Thread.currentThread().stop();
     }
 
 
