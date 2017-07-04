@@ -23,7 +23,7 @@ public class TestLambda {
 
         a = 4;
         b = 2;
-        System.out.println("subtract: " + diff((a, b) -> (a - b)));
+        System.out.println("subtract: " + diff((a, b) -> a - b));
         System.out.println("--------------------------------");
 
         s = "hello";

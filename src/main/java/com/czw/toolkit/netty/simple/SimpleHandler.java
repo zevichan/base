@@ -1,6 +1,8 @@
 package com.czw.toolkit.netty.simple;
 
 import io.netty.buffer.ByteBuf;
+import io.netty.channel.ChannelFuture;
+import io.netty.channel.ChannelFutureListener;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
 
@@ -25,8 +27,9 @@ class SimpleHandler extends ChannelInboundHandlerAdapter {
         // 在当前场景下，发送的数据必须转换成ByteBuf数组
         ByteBuf encoded = ctx.alloc().buffer(4 * response.length());
         encoded.writeBytes(response.getBytes());
-        ctx.write(encoded);
+        final ChannelFuture f = ctx.write(encoded);
         ctx.flush();
+        f.addListener(ChannelFutureListener.CLOSE);
     }
 
     @Override
