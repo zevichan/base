@@ -31,18 +31,17 @@ public class FilterDirAndFiles {
             names.add(name);
         }
 
-        File target = new File("merchantImg");
+        File target = new File("merchantimg");
         if (!target.exists()) target.mkdir();
         final String i = imgPath.toAbsolutePath().toString();
         final String t = target.toPath().toAbsolutePath().toString();
         File[] fs = imgPath.toFile().listFiles();
-        int count = 0;
         for (File f : fs) {
-            if (count > 5) break;
             if (f.isDirectory() && names.contains(f.getName())) {
-                Files.walkFileTree(imgPath, new FileVisitor<Path>() {
+                Files.walkFileTree(f.toPath(), new FileVisitor<Path>() {
                     @Override
                     public FileVisitResult preVisitDirectory(Path dir, BasicFileAttributes attrs) throws IOException {
+                        System.out.println("dir Path : " + dir.toAbsolutePath().toString());
                         Path path = Paths.get(dir.toAbsolutePath().toString().replace(i, t));
                         Files.createDirectories(path);
                         return FileVisitResult.CONTINUE;
@@ -67,12 +66,11 @@ public class FilterDirAndFiles {
                         return FileVisitResult.CONTINUE;
                     }
                 });
-                count++;
             }
         }
 
     }
-    
+
       /* pom.xml cmd:package  注意jdk version问题
 
     <plugin>
