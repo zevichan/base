@@ -28,6 +28,8 @@ public abstract class Controller {
         System.out.println("url: " + uri);
         QueryStringDecoder q = new QueryStringDecoder(uri);
         Map<String, List<String>> params = q.parameters();
+        if (params.isEmpty()) return;
+
         for (Map.Entry<String, List<String>> param : params.entrySet()) {
             System.out.print(param.getKey() + " : ");
             List<String> values = param.getValue();
