@@ -61,7 +61,7 @@ public class ComUtils {
         else if (path.contains("target/classes"))
             sep = "/target/classes";
 
-        out.println("origin path: " + path);
+//        out.println("origin path: " + path);
 
         String rootPath = "";
         // windows下
@@ -74,7 +74,7 @@ public class ComUtils {
             rootPath = path.substring(0, path.indexOf(sep));
             rootPath = rootPath.replace("\\", "/");
         }
-        out.println("project path: " + rootPath);
+//        out.println("project path: " + rootPath);
         return rootPath;
     }
 
@@ -119,7 +119,7 @@ public class ComUtils {
             path = path.replace(".", "/");
             filePath = rootPath + "/" + path + "/" + name;
         }
-        out.println("file path: " + filePath);
+//        out.println("file path: " + filePath);
         return filePath;
     }
 
