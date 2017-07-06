@@ -8,7 +8,10 @@ import io.netty.channel.ChannelFutureListener;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 import io.netty.handler.codec.http.*;
+import io.netty.handler.codec.http.cookie.ServerCookieDecoder;
 import io.netty.util.CharsetUtil;
+
+import java.util.Set;
 
 /**
  * @author ZeviChen , 2017/7/6 15:44
@@ -47,11 +50,30 @@ public class WebSocketIndexPage extends SimpleChannelInboundHandler<FullHttpRequ
             HttpUtil.setContentLength(res, res.content().readableBytes());
         }
 
+//        setCookies(req, res);
+
+        res.headers().set(HttpHeaderNames.CONTENT_TYPE, "text/html;charset=UTF-8");
         // Send the response and close the connection if necessary.
         ChannelFuture f = ctx.channel().writeAndFlush(res);
-        if (!HttpUtil.isKeepAlive(req) || res.status().code() != 200) {
-            f.addListener(ChannelFutureListener.CLOSE);
-        }
+        f.addListener(ChannelFutureListener.CLOSE);
+//        if (!HttpUtil.isKeepAlive(req) || res.status().code() != 200) {
+//            f.addListener(ChannelFutureListener.CLOSE);
+//        }
 
+    }
+
+    protected void setCookies(FullHttpRequest request, FullHttpResponse response) {
+        String strCookie = request.headers().get(HttpHeaderNames.COOKIE);
+        if (strCookie != null) {
+            Set<io.netty.handler.codec.http.cookie.Cookie> cookies = ServerCookieDecoder.STRICT.decode(strCookie);
+            if (!cookies.isEmpty()) {
+                for (io.netty.handler.codec.http.cookie.Cookie cookie : cookies) {
+                    response.headers().add(HttpHeaderNames.SET_COOKIE, io.netty.handler.codec.http.cookie.ServerCookieEncoder.STRICT.encode(cookie));
+                }
+            }
+        } else {
+            response.headers().add(HttpHeaderNames.SET_COOKIE, io.netty.handler.codec.http.cookie.ServerCookieEncoder.STRICT.encode("name", "zevi"));
+            response.headers().add(HttpHeaderNames.SET_COOKIE, io.netty.handler.codec.http.cookie.ServerCookieEncoder.STRICT.encode("server", "netty4.1"));
+        }
     }
 }

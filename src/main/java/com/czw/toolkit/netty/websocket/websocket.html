@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Connect Websocket</title>
+    <script src="https://cdn.staticfile.org/jquery/3.2.1/jquery.min.js"></script>
+    <script src="https://cdn.staticfile.org/socket.io/1.7.3/socket.io.min.js"></script>
+    <script>
+        window.onload = function () {
+            var srvmsg = "";
+            var server = "<span style='text-align: left;'>【server】:" + srvmsg + "</span>";
+            var cntmsg = "";
+            var client = "<span style='text-align: right;'>" + cntmsg + ":【client】</span>";
+
+            var ws = new WebSocket('ws://127.0.0.1/websocket');
+
+            // 打开Socket
+            ws.onopen = function (event) {
+                console.log("websocket connecting...");
+                $("#send").click(function () {
+                    console.log("click send");
+                    var content = $("#sendmsg").val();
+                    ws.send(content);
+                    $("#sendmsg").val("");
+                });
+            };
+
+            $("#sendmsg").keydown(function (e) {
+                if (e && e.keyCode == 13) {
+                    $("#send").click();
+                }
+            });
+
+            //获取消息
+            ws.onmessage = function (m) {
+                srvmsg = m.data;
+                $('#content').append(server);
+            };
+        }
+
+    </script>
+</head>
+<body>
+<div style="width: 400px;border: solid 1px black;" id="content">
+    <span>WebSocket Chat...</span>
+
+</div>
+<br/>
+<input id="sendmsg" type="text" value="" placeholder="chat"><input type="button" id="send" value="发送">
+<div id="output"></div>
+</body>
+</html>

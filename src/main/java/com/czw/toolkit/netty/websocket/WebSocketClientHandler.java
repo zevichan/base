@@ -31,9 +31,23 @@ public class WebSocketClientHandler extends SimpleChannelInboundHandler<Object> 
     }
 
     @Override
+    public void handlerAdded(ChannelHandlerContext ctx) {
+        handshakeFuture = ctx.newPromise();
+    }
+
+    @Override
+    public void channelActive(ChannelHandlerContext ctx) {
+        handshaker.handshake(ctx.channel());
+    }
+
+    @Override
+    public void channelInactive(ChannelHandlerContext ctx) {
+        System.out.println("WebSocket Client disconnected!");
+    }
+
+    @Override
     protected void channelRead0(ChannelHandlerContext ctx, Object frame) throws Exception {
         System.out.println("msg: " + frame);
-        handshakeFuture = ctx.newProgressivePromise();
 
         if (!handshaker.isHandshakeComplete()) {
             handshaker.finishHandshake(ctx.channel(), (FullHttpResponse) frame);
