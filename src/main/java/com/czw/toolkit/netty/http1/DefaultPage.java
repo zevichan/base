@@ -16,14 +16,14 @@ public class DefaultPage {
     public final static StringBuilder INDEX = new StringBuilder();
     public final static StringBuilder NOT_FOUND = new StringBuilder();
     public final static StringBuilder EMPTY = new StringBuilder();
+    public final static StringBuilder WEBSOCKET = new StringBuilder();
 
 
     static {
         try {
-            String index = PAGE_ROOT + "index.html";
-            String notFound = PAGE_ROOT + "404.html";
-            INDEX.append(Files.toString(new File(index), Charset.forName("UTF-8")));
-            NOT_FOUND.append(Files.toString(new File(notFound), Charset.forName("UTF-8")));
+            INDEX.append(Files.toString(new File(PAGE_ROOT + "index.html"), Charset.forName("UTF-8")));
+            NOT_FOUND.append(Files.toString(new File(PAGE_ROOT + "404.html"), Charset.forName("UTF-8")));
+            WEBSOCKET.append(Files.toString(new File(PAGE_ROOT + "websocket.html"), Charset.forName("UTF-8")));
         } catch (IOException e) {
             e.printStackTrace();
         }
