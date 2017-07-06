@@ -7,13 +7,20 @@ import io.netty.channel.*;
 import io.netty.handler.codec.http.*;
 import io.netty.handler.ssl.SslHandler;
 import io.netty.handler.stream.ChunkedFile;
+import io.netty.handler.stream.ChunkedNioFile;
 import io.netty.util.CharsetUtil;
+import org.joda.time.chrono.ZonedChronology;
 
 import javax.activation.MimetypesFileTypeMap;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.RandomAccessFile;
 import java.text.SimpleDateFormat;
+import java.time.*;
+import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoField;
+import java.time.temporal.TemporalAccessor;
+import java.time.temporal.TemporalAdjuster;
 import java.util.*;
 import java.util.regex.Pattern;
 
@@ -25,9 +32,9 @@ import static io.netty.handler.codec.http.HttpVersion.HTTP_1_1;
  */
 public class HttpFileServerHandler extends SimpleChannelInboundHandler<FullHttpRequest> {
 
-    public static final String HTTP_DATE_FORMAT = "EEE, dd MMM yyyy HH:mm:ss zzz";
-    public static final String HTTP_DATE_GMT_TIMEZONE = "GMT";
+    public static final String HTTP_DATE_FORMAT = "EEE, dd MMM yyyy HH:mm:ss Z";
     public static final int HTTP_CACHE_SECONDS = 60;
+    public static final DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern(HTTP_DATE_FORMAT, Locale.US);
 
 
     @Override
@@ -35,6 +42,7 @@ public class HttpFileServerHandler extends SimpleChannelInboundHandler<FullHttpR
         String uri = msg.uri();
 
         String temp = uri.substring(1, uri.length());
+        temp = temp.replace("/", File.separator);
         temp = ComUtils.getFilePath("com.czw.toolkit.netty.file", temp, true);
 
         System.out.println("filePath: " + temp);
@@ -71,12 +79,9 @@ public class HttpFileServerHandler extends SimpleChannelInboundHandler<FullHttpR
 
         String ifModifiedSince = msg.headers().get(HttpHeaderNames.IF_MODIFIED_SINCE);
         if (ifModifiedSince != null && !ifModifiedSince.isEmpty()) {
-            SimpleDateFormat dateFormatter = new SimpleDateFormat(HTTP_DATE_FORMAT, Locale.US);
-            Date ifModifiedSinceDate = dateFormatter.parse(ifModifiedSince);
+            LocalDateTime localDateTime1 = LocalDateTime.parse(ifModifiedSince, dateTimeFormatter);
+            long ifModifiedSinceDateSeconds = Date.from(localDateTime1.toInstant(ZoneOffset.UTC)).getTime() / 1000;
 
-            // Only compare up to the second because the datetime format we send to the client
-            // does not have milliseconds
-            long ifModifiedSinceDateSeconds = ifModifiedSinceDate.getTime() / 1000;
             long fileLastModifiedSeconds = file.lastModified() / 1000;
             if (ifModifiedSinceDateSeconds == fileLastModifiedSeconds) {
                 sendNotModified(ctx);
@@ -107,19 +112,42 @@ public class HttpFileServerHandler extends SimpleChannelInboundHandler<FullHttpR
         // Write the content.
         ChannelFuture sendFileFuture;
         ChannelFuture lastContentFuture;
+
+
+        /*
+         * web中断点续传的实现
+         * first response header:
+         *      Content-Length=106786028
+         *      Accept-Ranges=bytes
+         * second request header:
+         *      RANGE: bytes=2000070-
+         * third response header:
+         *      Content-Length=106786028
+         *      Content-Range=bytes 2000070-106786027/106786028
+         *
+         */
+
+
         if (ctx.pipeline().get(SslHandler.class) == null) {
+
+            //https://github.com/netty/netty/issues/2235        issue:auto close
+            //在非ssl环境下可使用DefaultFileRegion进行文件断点续传操作
+
             sendFileFuture =
                     ctx.write(new DefaultFileRegion(raf.getChannel(), 0, fileLength), ctx.newProgressivePromise());
             // Write the end marker.
             lastContentFuture = ctx.writeAndFlush(LastHttpContent.EMPTY_LAST_CONTENT);
         } else {
+            //在ssl环境下使用HttpChunkedInput进行文件传输更加适合
+
             sendFileFuture =
-                    ctx.writeAndFlush(new HttpChunkedInput(new ChunkedFile(raf, 0, fileLength, 8192)),
+                    ctx.writeAndFlush(new HttpChunkedInput(new ChunkedNioFile(raf.getChannel(), 0, fileLength, 8192)),
                             ctx.newProgressivePromise());
             // HttpChunkedInput will write the end marker (LastHttpContent) for us.
             lastContentFuture = sendFileFuture;
         }
 
+        //文件进度条
         sendFileFuture.addListener(new ChannelProgressiveFutureListener() {
             @Override
             public void operationProgressed(ChannelProgressiveFuture future, long progress, long total) {
@@ -208,11 +236,7 @@ public class HttpFileServerHandler extends SimpleChannelInboundHandler<FullHttpR
     }
 
     private static void setDateHeader(FullHttpResponse response) {
-        SimpleDateFormat dateFormatter = new SimpleDateFormat(HTTP_DATE_FORMAT, Locale.US);
-        dateFormatter.setTimeZone(TimeZone.getTimeZone(HTTP_DATE_GMT_TIMEZONE));
-
-        Calendar time = new GregorianCalendar();
-        response.headers().set(HttpHeaderNames.DATE, dateFormatter.format(time.getTime()));
+        response.headers().set(HttpHeaderNames.DATE, dateTimeFormatter.format(ZonedDateTime.now(ZoneId.of("+8"))));
     }
 
 
@@ -223,20 +247,29 @@ public class HttpFileServerHandler extends SimpleChannelInboundHandler<FullHttpR
         ctx.writeAndFlush(response).addListener(ChannelFutureListener.CLOSE);
     }
 
+    /**
+     * 文件过期时间 HTTP_CACHE_SECONDS = 60s
+     *
+     * @param response
+     * @param fileToCache
+     */
     private static void setDateAndCacheHeaders(HttpResponse response, File fileToCache) {
-        SimpleDateFormat dateFormatter = new SimpleDateFormat(HTTP_DATE_FORMAT, Locale.US);
-        dateFormatter.setTimeZone(TimeZone.getTimeZone(HTTP_DATE_GMT_TIMEZONE));
+        ZonedDateTime zonedDateTime = ZonedDateTime.now(ZoneOffset.UTC);
+        response.headers().set(HttpHeaderNames.DATE, dateTimeFormatter.format(zonedDateTime));
 
-        Calendar time = new GregorianCalendar();
-        response.headers().set(HttpHeaderNames.DATE, dateFormatter.format(time.getTime()));
-
-        time.add(Calendar.SECOND, HTTP_CACHE_SECONDS);
-        response.headers().set(HttpHeaderNames.EXPIRES, dateFormatter.format(time.getTime()));
+        zonedDateTime.plusSeconds(HTTP_CACHE_SECONDS);
+        response.headers().set(HttpHeaderNames.EXPIRES, dateTimeFormatter.format(zonedDateTime));
         response.headers().set(HttpHeaderNames.CACHE_CONTROL, "private, max-age=" + HTTP_CACHE_SECONDS);
-        response.headers().set(
-                HttpHeaderNames.LAST_MODIFIED, dateFormatter.format(new Date(fileToCache.lastModified())));
+
+        response.headers().set(HttpHeaderNames.LAST_MODIFIED, Instant.ofEpochMilli(fileToCache.lastModified())
+                .atZone(ZoneOffset.UTC).format(dateTimeFormatter));
     }
 
+    /**
+     * 加载java中定义的所有mime类型,通过文件后缀名匹配对应的类型放入Content-Type中
+     * @param response
+     * @param file
+     */
     private static void setContentTypeHeader(HttpResponse response, File file) {
         MimetypesFileTypeMap mimeTypesMap = new MimetypesFileTypeMap();
         response.headers().set(HttpHeaderNames.CONTENT_TYPE, mimeTypesMap.getContentType(file.getPath()));
