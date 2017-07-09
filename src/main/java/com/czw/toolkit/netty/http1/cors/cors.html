@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Cors</title>
+    <script src="https://cdn.staticfile.org/jquery/3.2.1/jquery.min.js"></script>
+    <script>
+        $(function () {
+            $("#cors").click(function (e) {
+                $.ajax({
+                    type: "get",
+                    async: false,
+                    url: "http://localhost",
+                    dataType: "json",
+                    jsonp: "callback",
+                    data: JSON.stringify({"name": "zhangsan"}),
+                    success: function (data) {
+                        $("#content").append("success:" + data);
+                    },
+                    error: function () {
+                        console.log("fail");
+                    },
+                    dataFilter: function (data) {
+                        $("#content").append("dataFilter:" + data);
+                    },
+                    complete: function (data) {
+                        $("#content").append("complete:" + data.responseText);
+                        console.log("complete:" + data.responseText)
+
+                    }
+                })
+            });
+
+        });
+
+    </script>
+</head>
+<body>
+<input type="button" value="跨域" id="cors"/>
+<div id="content"></div>
+</body>
+</html>
