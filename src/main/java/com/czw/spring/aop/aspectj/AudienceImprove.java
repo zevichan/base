@@ -15,7 +15,7 @@ import org.aspectj.lang.annotation.Pointcut;
  */
 @Aspect
 public class AudienceImprove {
-	@Pointcut("execution(* com.czw.aop.act.Performance.perform(..))")
+	@Pointcut("execution(* com.czw.spring.aop.act.Performance.perform(..))")
 	public void perform(){}
 	
 	@Before("perform()")

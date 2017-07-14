@@ -14,21 +14,21 @@ import org.aspectj.lang.annotation.Before;
 //@Aspect
 public class Audience {
 	
-	@Before("execution(** com.czw.act.Performance.perform(..))")
+	@Before("execution(** com.czw.spring.aop.act.Performance.perform(..))")
 	public void silenceCellPhones(){
 		System.out.println("before Silencing cell phones");
 	}
-	@After("execution(** com.czw.act.Performance.perform(..))")
+	@After("execution(** com.czw.spring.aop.act.Performance.perform(..))")
 	public void after(){
 		System.out.println("after ");
 	}
 	
-	@AfterReturning("execution(** com.czw.act.Performance.perform(..))")
+	@AfterReturning("execution(** com.czw.spring.aop.act.Performance.perform(..))")
 	public void applause(){
 		System.out.println("afterreturning CLAP CLAP CLAP");
 	}
 	
-	@AfterThrowing("execution(** com.czw.act.Performance.perform(..))")
+	@AfterThrowing("execution(** com.czw.spring.aop.act.Performance.perform(..))")
 	public void demandRefund(){
 		System.out.println("AfterThrowing demanding a refund");
 	}

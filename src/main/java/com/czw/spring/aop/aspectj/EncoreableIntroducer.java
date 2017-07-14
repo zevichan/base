@@ -15,7 +15,7 @@ import com.czw.spring.aop.act.impl.DefaultEncoreable;
 @Aspect
 public class EncoreableIntroducer {
 	
-	@DeclareParents(value="com.czw.aop.act.Performance+",defaultImpl=DefaultEncoreable.class)
+	@DeclareParents(value="com.czw.spring.aop.act.Performance+",defaultImpl=DefaultEncoreable.class)
 	public static Encoreable encoreable;
 	
 }

@@ -20,7 +20,7 @@ public class TrackCounter {
 	private static Logger log = LoggerFactory.getLogger(TrackCounter.class);
 	private Map<Integer,Integer> trackCounts = new HashMap<Integer, Integer>();
 	
-	@Pointcut("execution(* com.czw.aop.act.CompactDisc.playTrack(int)) && args(trackNumber)")
+	@Pointcut("execution(* com.czw.spring.aop.act.CompactDisc.playTrack(int)) && args(trackNumber)")
 	public void trackPlayed(int trackNumber){}
 	
 	@Before("trackPlayed(trackNumber)")

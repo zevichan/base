@@ -46,7 +46,7 @@ public class PojoTest {
 	}
 	
 	@Test
-	@Ignore
+//	@Ignore
 	public void disc(){
 		cd.playTrack(0);
 		cd.playTrack(1);
